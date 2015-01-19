@@ -2055,6 +2055,15 @@ static void emit_umull(u_int rs1, u_int rs2, u_int hi, u_int lo)
   assert(lo<16);
   output_w32(0xe0800090|(hi<<16)|(lo<<12)|(rs2<<8)|rs1);
 }
+static void emit_umlal(u_int rs1, u_int rs2, u_int hi, u_int lo)
+{
+  assem_debug("umlal %s, %s, %s, %s",regname[lo],regname[hi],regname[rs1],regname[rs2]);
+  assert(rs1<16);
+  assert(rs2<16);
+  assert(hi<16);
+  assert(lo<16);
+  output_w32(0xe0a00090|(hi<<16)|(lo<<12)|(rs2<<8)|rs1);
+}
 static void emit_smull(u_int rs1, u_int rs2, u_int hi, u_int lo)
 {
   assem_debug("smull %s, %s, %s, %s",regname[lo],regname[hi],regname[rs1],regname[rs2]);
