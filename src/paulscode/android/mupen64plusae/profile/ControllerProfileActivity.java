@@ -23,7 +23,7 @@ package paulscode.android.mupen64plusae.profile;
 import java.util.Arrays;
 import java.util.List;
 
-import org.mupen64plusae.v3.alpha.R;
+import org.mupen64plusae.v3.alpha.dmultu.R;
 
 import paulscode.android.mupen64plusae.Keys;
 import paulscode.android.mupen64plusae.dialog.Prompt;

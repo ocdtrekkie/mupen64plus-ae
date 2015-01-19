@@ -23,7 +23,7 @@ package paulscode.android.mupen64plusae;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.mupen64plusae.v3.alpha.R;
+import org.mupen64plusae.v3.alpha.dmultu.R;
 
 import paulscode.android.mupen64plusae.dialog.Prompt;
 import paulscode.android.mupen64plusae.dialog.Prompt.PromptConfirmListener;

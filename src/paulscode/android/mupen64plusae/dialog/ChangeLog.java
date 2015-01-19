@@ -25,7 +25,7 @@ import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.mupen64plusae.v3.alpha.R;
+import org.mupen64plusae.v3.alpha.dmultu.R;
 
 import android.app.AlertDialog.Builder;
 import android.content.Context;
