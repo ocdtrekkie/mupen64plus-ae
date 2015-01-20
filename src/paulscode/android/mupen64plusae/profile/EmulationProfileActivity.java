@@ -20,7 +20,7 @@
  */
 package paulscode.android.mupen64plusae.profile;
 
-import org.mupen64plusae.v3.alpha.R;
+import org.mupen64plusae.v3.alpha.divide.R;
 
 import paulscode.android.mupen64plusae.persistent.UserPrefs;
 import paulscode.android.mupen64plusae.preference.PrefUtil;
