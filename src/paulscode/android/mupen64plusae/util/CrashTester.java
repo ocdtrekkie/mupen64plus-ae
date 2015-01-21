@@ -21,7 +21,7 @@
 package paulscode.android.mupen64plusae.util;
 
 import org.acra.ACRA;
-import org.mupen64plusae.v3.alpha.R;
+import org.mupen64plusae.v3.alpha.dmult.R;
 
 import android.app.Activity;
 import android.content.DialogInterface;

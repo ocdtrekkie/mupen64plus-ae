@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.mupen64plusae.v3.alpha.R;
+import org.mupen64plusae.v3.alpha.dmult.R;
 
 import paulscode.android.mupen64plusae.persistent.ConfigFile;
 import paulscode.android.mupen64plusae.profile.Profile;

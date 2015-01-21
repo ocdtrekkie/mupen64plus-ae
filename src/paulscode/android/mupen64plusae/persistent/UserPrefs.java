@@ -27,7 +27,7 @@ import java.util.Locale;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.WordUtils;
-import org.mupen64plusae.v3.alpha.R;
+import org.mupen64plusae.v3.alpha.dmult.R;
 
 import paulscode.android.mupen64plusae.jni.NativeConstants;
 import paulscode.android.mupen64plusae.persistent.AppData.HardwareInfo;

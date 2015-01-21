@@ -22,7 +22,7 @@ package paulscode.android.mupen64plusae;
 
 import java.util.ArrayList;
 
-import org.mupen64plusae.v3.alpha.R;
+import org.mupen64plusae.v3.alpha.dmult.R;
 
 import paulscode.android.mupen64plusae.hack.MogaHack;
 import paulscode.android.mupen64plusae.input.AbstractController;

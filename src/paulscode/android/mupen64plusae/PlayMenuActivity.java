@@ -23,7 +23,7 @@ package paulscode.android.mupen64plusae;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.mupen64plusae.v3.alpha.R;
+import org.mupen64plusae.v3.alpha.dmult.R;
 
 import paulscode.android.mupen64plusae.cheat.CheatEditorActivity;
 import paulscode.android.mupen64plusae.cheat.CheatFile;
