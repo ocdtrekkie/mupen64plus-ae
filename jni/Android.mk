@@ -134,6 +134,7 @@ LOCAL_LDLIBS := -lz
 
 ifeq ($(TARGET_ARCH_ABI), armeabi-v7a)
     # Use for ARM7a:
+    LOCAL_SRC_FILES += $(SRCDIR)/r4300/new_dynarec/arm_cpu_features.cpp
     LOCAL_SRC_FILES += $(SRCDIR)/r4300/new_dynarec/linkage_arm.S
     LOCAL_CFLAGS += -DDYNAREC
     LOCAL_CFLAGS += -DNEW_DYNAREC=3
@@ -142,6 +143,7 @@ ifeq ($(TARGET_ARCH_ABI), armeabi-v7a)
 
 else ifeq ($(TARGET_ARCH_ABI), armeabi)
     # Use for pre-ARM7a:
+    LOCAL_SRC_FILES += $(SRCDIR)/r4300/new_dynarec/arm_cpu_features.cpp
     LOCAL_SRC_FILES += $(SRCDIR)/r4300/new_dynarec/linkage_arm.S
     LOCAL_CFLAGS += -DARMv5_ONLY
     LOCAL_CFLAGS += -DDYNAREC
