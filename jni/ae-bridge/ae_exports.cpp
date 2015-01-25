@@ -80,7 +80,12 @@ extern jint JNI_OnLoad(JavaVM* vm, void* reserved)
 
 extern "C" DECLSPEC void SDLCALL Java_paulscode_android_mupen64plusae_jni_NativeExports_loadLibraries(JNIEnv* env, jclass cls, jstring jlibPath)
 {
-    LOGI("Loading native libraries");
+    // Unload the libraries to ensure that static variables are re-initialized next time
+    LOGI("Unloading native libraries");
+    if (handleFront) dlclose(handleFront);
+    if (handleCore)  dlclose(handleCore);
+    if (handleSDL)   dlclose(handleSDL);
+    if (handleAEI)   dlclose(handleAEI);
 
     // Construct the library paths
     const char *libPath = env->GetStringUTFChars(jlibPath, 0);
@@ -95,6 +100,7 @@ extern "C" DECLSPEC void SDLCALL Java_paulscode_android_mupen64plusae_jni_Native
     env->ReleaseStringUTFChars(jlibPath, libPath);
 
     // Open shared libraries
+    LOGI("Loading native libraries");
     handleAEI   = dlopen(pathAEI,   RTLD_NOW);
     handleSDL   = dlopen(pathSDL,   RTLD_NOW);
     handleCore  = dlopen(pathCore,  RTLD_NOW);
@@ -131,9 +137,6 @@ extern "C" DECLSPEC void SDLCALL Java_paulscode_android_mupen64plusae_jni_Native
 
 extern "C" DECLSPEC void SDLCALL Java_paulscode_android_mupen64plusae_jni_NativeExports_unloadLibraries(JNIEnv* env, jclass cls)
 {
-    // Unload the libraries to ensure that static variables are re-initialized next time
-    LOGI("Unloading native libraries");
-
     // Nullify function pointers
     aeiInit         = NULL;
     sdlInit         = NULL;
@@ -141,18 +144,6 @@ extern "C" DECLSPEC void SDLCALL Java_paulscode_android_mupen64plusae_jni_Native
     sdlMainReady    = NULL;
     coreDoCommand   = NULL;
     frontMain       = NULL;
-
-    // Close shared libraries
-    if (handleFront) dlclose(handleFront);
-    if (handleCore)  dlclose(handleCore);
-    if (handleSDL)   dlclose(handleSDL);
-    if (handleAEI)   dlclose(handleAEI);
-
-    // Nullify handles
-    handleFront     = NULL;
-    handleCore      = NULL;
-    handleSDL       = NULL;
-    handleAEI       = NULL;
 }
 
 extern "C" DECLSPEC jint SDLCALL Java_paulscode_android_mupen64plusae_jni_NativeExports_emuStart(JNIEnv* env, jclass cls, jstring juserDataPath, jstring juserCachePath, jobjectArray jargv)
