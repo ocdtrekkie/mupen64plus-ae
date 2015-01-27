@@ -82,10 +82,14 @@ extern "C" DECLSPEC void SDLCALL Java_paulscode_android_mupen64plusae_jni_Native
 {
     // Unload the libraries to ensure that static variables are re-initialized next time
     LOGI("Unloading native libraries");
-    if (handleFront) dlclose(handleFront);
-    if (handleCore)  dlclose(handleCore);
-    if (handleSDL)   dlclose(handleSDL);
-    if (handleAEI)   dlclose(handleAEI);
+    if (handleFront && !dlclose(handleFront))
+    	LOGE("Failed to unload libmupen64plus-ui-console.so");
+    if (handleCore && !dlclose(handleCore))
+    	LOGE("Failed to unload libmupen64plus-core.so");
+    if (handleSDL && !dlclose(handleSDL))
+    	LOGE("Failed to unload libSDL2.so");
+    if (handleAEI && !dlclose(handleAEI))
+    	LOGE("Failed to unload libae-imports.so");
 
     // Construct the library paths
     const char *libPath = env->GetStringUTFChars(jlibPath, 0);
