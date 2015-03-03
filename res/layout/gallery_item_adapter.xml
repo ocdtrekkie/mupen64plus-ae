@@ -12,17 +12,26 @@
         android:layout_gravity="center_horizontal"
         android:src="@drawable/default_coverart" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/info"
         android:layout_width="@dimen/galleryImageWidth"
-        android:layout_height="50dip"
-        android:orientation="horizontal" >
+        android:layout_height="50dip" >
         
         <TextView
             android:id="@+id/text1"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/dots"
             android:text="@string/galleryItemAdapter_dummyText"
             android:textAppearance="?android:attr/textAppearanceSmall" />
-    </LinearLayout>
+        
+        <ImageView
+            android:id="@+id/dots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:alpha="0.7"
+            android:src="@drawable/ic_dots" />
+    </RelativeLayout>
 </LinearLayout>
