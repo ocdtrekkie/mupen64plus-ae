@@ -84,9 +84,10 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
     private String mSearchQuery = "";
     
     // Resizable gallery thumbnails
-    public static final int MAX_WIDTH = 175;
-    public int galleryWidth = MAX_WIDTH;
-    public int numColumns = 2;
+    public int galleryWidth;
+    public int galleryMaxWidth;
+    public int galleryColumns = 2;
+    public float galleryAspectRatio;
     
     // Background tasks
     private CacheRomInfoTask mCacheRomInfoTask = null;
@@ -145,6 +146,9 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
         setContentView( R.layout.gallery_activity );
         mGridView = (RecyclerView) findViewById( R.id.gridview );
         
+        galleryMaxWidth = (int) getResources().getDimension(R.dimen.galleryImageWidth);
+        galleryAspectRatio = galleryMaxWidth * 1.0f/getResources().getDimension(R.dimen.galleryImageHeight);
+        
         mGridView.addOnLayoutChangeListener( new OnLayoutChangeListener()
         {
             public void onLayoutChange( View view, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom )
@@ -155,11 +159,11 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
                 float logicalDensity = metrics.density;
                 
                 int width = (int) ( (right - left)/logicalDensity );
-                numColumns = (int) Math.ceil(width * 1.0/MAX_WIDTH);
-                galleryWidth = (int) ( width/numColumns * logicalDensity );
+                galleryColumns = (int) Math.ceil(width * 1.0/galleryMaxWidth);
+                galleryWidth = (int) ( width/galleryColumns * logicalDensity );
                 
                 GridLayoutManager layoutManager = (GridLayoutManager) mGridView.getLayoutManager();
-                layoutManager.setSpanCount( numColumns );
+                layoutManager.setSpanCount( galleryColumns );
                 mGridView.getAdapter().notifyDataSetChanged();
             }
         });
@@ -415,7 +419,7 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
         }
         Collections.sort( items );
         mGridView.setAdapter( new GalleryItem.Adapter( this, items ) );
-        mGridView.setLayoutManager( new GridLayoutManager( this, numColumns ) );
+        mGridView.setLayoutManager( new GridLayoutManager( this, galleryColumns ) );
     }
     
     private void popupFaq()
