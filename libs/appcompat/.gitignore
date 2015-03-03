@@ -1,0 +1,18 @@
+# Generated and temporary files
+bin/
+gen/
+obj/
+tmp/
+*~
+*~.nib
+*.a
+*.ap_
+*.apk
+*.bak
+*.class
+*.d
+*.dex
+*.o
+*.so
+*.swp
+*.tmp
