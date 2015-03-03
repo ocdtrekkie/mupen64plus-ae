@@ -1,0 +1,44 @@
+# Generated and temporary files
+bin/
+gen/
+obj/
+tmp/
+*~
+*~.nib
+*.a
+*.ap_
+*.apk
+*.bak
+*.class
+*.d
+*.dex
+*.o
+*.so
+*.swp
+*.tmp
+
+# Eclipse project files
+.settings/
+.externalToolBuilders/
+proguard/
+.buildpath
+.classpath
+.cproject
+.loadpath
+.metadata
+.project
+*.launch
+*.pydevproject
+local.properties
+
+# Intellij project files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Crash-report related
+crashreport.txt
+
+# Transifex client
+tx.exe

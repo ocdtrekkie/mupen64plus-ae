@@ -38,7 +38,7 @@ Setting up the project:
 2. Run "android list targets" to find the index ## for API level 17 or higher
 
 3. Update the Android project
-   (example: "android update project --target ## --name Mupen64Plus --path . --library libs/appcompat")
+   (example: "android update project --target ## --name Mupen64Plus --path . --library libs/appcompat --library libs/recyclerview --library libs/gridlayout")
 
 
 
