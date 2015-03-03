@@ -146,18 +146,18 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
         setContentView( R.layout.gallery_activity );
         mGridView = (RecyclerView) findViewById( R.id.gridview );
         
-        galleryMaxWidth = (int) getResources().getDimension(R.dimen.galleryImageWidth);
-        galleryHalfSpacing = (int) getResources().getDimension(R.dimen.galleryHalfSpacing);
-        galleryAspectRatio = galleryMaxWidth * 1.0f/getResources().getDimension(R.dimen.galleryImageHeight);
+        galleryMaxWidth = (int) getResources().getDimension( R.dimen.galleryImageWidth );
+        galleryHalfSpacing = (int) getResources().getDimension( R.dimen.galleryHalfSpacing );
+        galleryAspectRatio = galleryMaxWidth * 1.0f/getResources().getDimension( R.dimen.galleryImageHeight );
         
         mGridView.addOnLayoutChangeListener( new OnLayoutChangeListener()
         {
             public void onLayoutChange( View view, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom )
             {
                 // Update the grid layout
-                int width = (int) right - left - galleryHalfSpacing * 2;
+                int width = right - left - galleryHalfSpacing * 2;
                 galleryColumns = (int) Math.ceil(width * 1.0 / ( galleryMaxWidth + galleryHalfSpacing * 2 ) );
-                galleryWidth = (int) width / galleryColumns - galleryHalfSpacing * 2;
+                galleryWidth = width / galleryColumns - galleryHalfSpacing * 2;
                 
                 GridLayoutManager layoutManager = (GridLayoutManager) mGridView.getLayoutManager();
                 layoutManager.setSpanCount( galleryColumns );

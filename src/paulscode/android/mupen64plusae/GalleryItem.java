@@ -122,7 +122,7 @@ public class GalleryItem implements Comparable<GalleryItem>
         
         @Override
         public String toString() {
-            return "";
+            return item.toString();
         }
         
         @Override
@@ -130,7 +130,7 @@ public class GalleryItem implements Comparable<GalleryItem>
         {
             if ( mContext instanceof GalleryActivity )
             {
-                GalleryActivity activity = (GalleryActivity) view.getContext();
+                GalleryActivity activity = (GalleryActivity) mContext;
                 activity.onGalleryItemClick( item );
             }
         }
