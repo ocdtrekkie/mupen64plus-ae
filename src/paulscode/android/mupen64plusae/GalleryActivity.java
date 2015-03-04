@@ -139,7 +139,7 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
         {
             String givenRomPath = extras.getString( Keys.Extras.ROM_PATH );
             if( !TextUtils.isEmpty( givenRomPath ) )
-                launchPlayMenuActivity( givenRomPath, PlayMenuActivity.ACTION_RESUME );
+                launchPlayMenuActivity( givenRomPath );
         }
         
         // Lay out the content
@@ -294,7 +294,10 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
         else if( item.romFile == null )
             Log.e( "GalleryActivity", "No ROM file available" );
         else
-            launchPlayMenuActivity( item.romFile.getAbsolutePath(), item.md5, PlayMenuActivity.ACTION_RESUME );
+        {
+            PlayMenuActivity.action = PlayMenuActivity.ACTION_RESUME;
+            launchPlayMenuActivity( item.romFile.getAbsolutePath(), item.md5 );
+        }
     }
     
     public boolean onGalleryItemCreateMenu( GalleryItem item, Menu menu )
@@ -311,46 +314,45 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
             Log.e( "GalleryActivity", "No ROM file available" );
         else
         {
-            String action = "";
+            PlayMenuActivity.action = null;
             switch( menuItem.getItemId() )
             {
                 case R.id.menuItem_resume:
-                    action = PlayMenuActivity.ACTION_RESUME;
+                    PlayMenuActivity.action = PlayMenuActivity.ACTION_RESUME;
                     break;
                 case R.id.menuItem_restart:
-                    action = PlayMenuActivity.ACTION_RESTART;
+                    PlayMenuActivity.action = PlayMenuActivity.ACTION_RESTART;
                     break;
                 case R.id.menuItem_settings:
                     break;
             }
-            launchPlayMenuActivity( item.romFile.getAbsolutePath(), item.md5, action );
+            launchPlayMenuActivity( item.romFile.getAbsolutePath(), item.md5 );
             return true;
         }
         
         return false;
     }
     
-    private void launchPlayMenuActivity( final String romPath, String action )
+    private void launchPlayMenuActivity( final String romPath )
     {
         // Asynchronously compute MD5 and launch play menu when finished
         Notifier.showToast( this, String.format( getString( R.string.toast_loadingGameInfo ) ) );
-        new ComputeMd5Task( new File( romPath ), this, action ).execute();
+        new ComputeMd5Task( new File( romPath ), this ).execute();
     }
     
     @Override
-    public void onComputeMd5Finished( File file, String md5, String action )
+    public void onComputeMd5Finished( File file, String md5 )
     {
-        launchPlayMenuActivity( file.getAbsolutePath(), md5, action );
+        launchPlayMenuActivity( file.getAbsolutePath(), md5 );
     }
     
-    private void launchPlayMenuActivity( String romPath, String md5, String action )
+    private void launchPlayMenuActivity( String romPath, String md5 )
     {
         if( !TextUtils.isEmpty( romPath ) && !TextUtils.isEmpty( md5 ) )
         {
             Intent intent = new Intent( GalleryActivity.this, PlayMenuActivity.class );
             intent.putExtra( Keys.Extras.ROM_PATH, romPath );
             intent.putExtra( Keys.Extras.ROM_MD5, md5 );
-            intent.putExtra( Keys.Extras.ACTION, action );
             startActivity( intent );
         }
     }

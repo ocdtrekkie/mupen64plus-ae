@@ -90,7 +90,6 @@ public class PlayMenuActivity extends PreferenceActivity implements OnPreference
     private UserPrefs mUserPrefs = null;
     private GamePrefs mGamePrefs = null;
     private SharedPreferences mPrefs = null;
-    private String mAction = null;
     
     // ROM info
     private String mRomPath = null;
@@ -111,6 +110,9 @@ public class PlayMenuActivity extends PreferenceActivity implements OnPreference
     
     // MOGA controller interface
     private Controller mMogaController = Controller.getInstance( this );
+    
+    // Go directly to gameplay from the gallery
+    public static String action = null;
     
     @SuppressWarnings( "deprecation" )
     @Override
@@ -204,8 +206,6 @@ public class PlayMenuActivity extends PreferenceActivity implements OnPreference
         
         // Build the cheats category as needed
         refreshCheatsCategory();
-        
-        mAction = extras.getString( Keys.Extras.ACTION );
     }
     
     @Override
@@ -216,18 +216,19 @@ public class PlayMenuActivity extends PreferenceActivity implements OnPreference
         mMogaController.onResume();
         refreshViews();
         
-        if ( ACTION_RESUME.equals( mAction ) )
+        if ( ACTION_RESUME.equals( action ) )
         {
-            mAction = ACTION_EXIT;
+            action = ACTION_EXIT;
             launchGame( false );
         }
-        else if ( ACTION_RESTART.equals( mAction ) )
+        else if ( ACTION_RESTART.equals( action ) )
         {
-            mAction = ACTION_EXIT;
+            action = ACTION_EXIT;
             launchGame( true );
         }
-        else if ( ACTION_EXIT.equals( mAction ) )
+        else if ( ACTION_EXIT.equals( action ) )
         {
+            action = null;
             finish();
         }
     }
