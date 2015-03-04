@@ -33,10 +33,10 @@ public class ComputeMd5Task extends AsyncTask<Void, Void, String>
 {
     public interface ComputeMd5Listener
     {
-        public void onComputeMd5Finished( File file, String md5 );
+        public void onComputeMd5Finished( File file, String md5, String action );
     }
     
-    public ComputeMd5Task( File file, ComputeMd5Listener listener )
+    public ComputeMd5Task( File file, ComputeMd5Listener listener, String action )
     {
         if( file == null)
             throw new IllegalArgumentException( "File cannot be null" );
@@ -47,10 +47,12 @@ public class ComputeMd5Task extends AsyncTask<Void, Void, String>
         
         mFile = file;
         mListener = listener;
+        mAction = action;
     }
     
     private final File mFile;
     private final ComputeMd5Listener mListener;
+    private final String mAction;
     
     @Override
     protected String doInBackground( Void... params )
@@ -61,7 +63,7 @@ public class ComputeMd5Task extends AsyncTask<Void, Void, String>
     @Override
     protected void onPostExecute( String result )
     {
-        mListener.onComputeMd5Finished( mFile, result );
+        mListener.onComputeMd5Finished( mFile, result, mAction );
     }
     
     public static String computeMd5( File file )

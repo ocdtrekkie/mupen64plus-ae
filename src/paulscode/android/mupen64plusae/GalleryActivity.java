@@ -139,7 +139,7 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
         {
             String givenRomPath = extras.getString( Keys.Extras.ROM_PATH );
             if( !TextUtils.isEmpty( givenRomPath ) )
-                launchPlayMenuActivity( givenRomPath );
+                launchPlayMenuActivity( givenRomPath, PlayMenuActivity.ACTION_RESUME );
         }
         
         // Lay out the content
@@ -233,9 +233,9 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
     }
     
     @Override
-    public boolean onOptionsItemSelected( MenuItem item )
+    public boolean onOptionsItemSelected( MenuItem menuItem )
     {
-        switch( item.getItemId() )
+        switch( menuItem.getItemId() )
         {
             case R.id.menuItem_refreshRoms:
                 promptSearchPath( null );
@@ -283,7 +283,7 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
                 mUserPrefs.changeLocale( this );
                 return true;
             default:
-                return super.onOptionsItemSelected( item );
+                return super.onOptionsItemSelected( menuItem );
         }
     }
     
@@ -294,29 +294,63 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
         else if( item.romFile == null )
             Log.e( "GalleryActivity", "No ROM file available" );
         else
-            launchPlayMenuActivity( item.romFile.getAbsolutePath(), item.md5 );
+            launchPlayMenuActivity( item.romFile.getAbsolutePath(), item.md5, PlayMenuActivity.ACTION_RESUME );
     }
     
-    private void launchPlayMenuActivity( final String romPath )
+    public boolean onGalleryItemCreateMenu( GalleryItem item, Menu menu )
+    {
+        getMenuInflater().inflate( R.menu.gallery_item, menu );
+        return true;
+    }
+    
+    public boolean onGalleryItemMenuSelected( GalleryItem item, MenuItem menuItem )
+    {
+        if( item == null )
+            Log.e( "GalleryActivity", "No item selected" );
+        else if( item.romFile == null )
+            Log.e( "GalleryActivity", "No ROM file available" );
+        else
+        {
+            String action = "";
+            switch( menuItem.getItemId() )
+            {
+                case R.id.menuItem_resume:
+                    action = PlayMenuActivity.ACTION_RESUME;
+                    break;
+                case R.id.menuItem_restart:
+                    action = PlayMenuActivity.ACTION_RESTART;
+                    break;
+                case R.id.menuItem_settings:
+                    break;
+            }
+            launchPlayMenuActivity( item.romFile.getAbsolutePath(), item.md5, action );
+            return true;
+        }
+        
+        return false;
+    }
+    
+    private void launchPlayMenuActivity( final String romPath, String action )
     {
         // Asynchronously compute MD5 and launch play menu when finished
         Notifier.showToast( this, String.format( getString( R.string.toast_loadingGameInfo ) ) );
-        new ComputeMd5Task( new File( romPath ), this ).execute();
+        new ComputeMd5Task( new File( romPath ), this, action ).execute();
     }
     
     @Override
-    public void onComputeMd5Finished( File file, String md5 )
+    public void onComputeMd5Finished( File file, String md5, String action )
     {
-        launchPlayMenuActivity( file.getAbsolutePath(), md5 );
+        launchPlayMenuActivity( file.getAbsolutePath(), md5, action );
     }
     
-    private void launchPlayMenuActivity( String romPath, String md5 )
+    private void launchPlayMenuActivity( String romPath, String md5, String action )
     {
         if( !TextUtils.isEmpty( romPath ) && !TextUtils.isEmpty( md5 ) )
         {
             Intent intent = new Intent( GalleryActivity.this, PlayMenuActivity.class );
             intent.putExtra( Keys.Extras.ROM_PATH, romPath );
             intent.putExtra( Keys.Extras.ROM_MD5, md5 );
+            intent.putExtra( Keys.Extras.ACTION, action );
             startActivity( intent );
         }
     }

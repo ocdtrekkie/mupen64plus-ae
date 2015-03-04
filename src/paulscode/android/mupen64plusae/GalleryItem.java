@@ -41,6 +41,11 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.PopupMenu;
+import android.widget.PopupMenu.OnMenuItemClickListener;
+
 public class GalleryItem implements Comparable<GalleryItem>
 {
     public final String md5;
@@ -114,7 +119,18 @@ public class GalleryItem implements Comparable<GalleryItem>
                     @Override
                     public void onClick( View view )
                     {
-                        System.out.println("Show contextual menu");
+                        final GalleryActivity galleryActivity = (GalleryActivity) mContext;
+                        PopupMenu popupMenu = new PopupMenu( mContext, view );
+                        popupMenu.setOnMenuItemClickListener( new OnMenuItemClickListener()
+                        {
+                            public boolean onMenuItemClick( MenuItem menuItem )
+                            {
+                                return galleryActivity.onGalleryItemMenuSelected( item, menuItem );
+                            }
+                        });
+                        
+                        if ( galleryActivity.onGalleryItemCreateMenu( item, popupMenu.getMenu() ) )
+                            popupMenu.show();
                     }
                 });
             }
