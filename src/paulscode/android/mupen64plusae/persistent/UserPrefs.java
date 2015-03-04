@@ -228,6 +228,7 @@ public class UserPrefs
     private static final String KEY_LOCALE_OVERRIDE = "localeOverride";
     private static final String KEY_SEARCH_ZIPS = "searchZips";
     private static final String KEY_DOWNLOAD_ART = "downloadArt";
+    private static final String KEY_SHOW_RECENTLY_PLAYED = "showRecentlyPlayed";
     // ... add more as needed
     
     // Shared preferences default values
@@ -239,6 +240,7 @@ public class UserPrefs
     public static final String DEFAULT_LOCALE_OVERRIDE = "";
     public static final boolean DEFAULT_SEARCH_ZIPS = true;
     public static final boolean DEFAULT_DOWNLOAD_ART = true;
+    public static final boolean DEFAULT_SHOW_RECENTLY_PLAYED = true;
     // ... add more as needed
     
     private final SharedPreferences mPreferences;
@@ -577,6 +579,11 @@ public class UserPrefs
     public boolean getDownloadArt()
     {
         return getBoolean( KEY_DOWNLOAD_ART, DEFAULT_DOWNLOAD_ART );
+    }
+    
+    public boolean getShowRecentlyPlayed()
+    {
+        return getBoolean( KEY_SHOW_RECENTLY_PLAYED, DEFAULT_SHOW_RECENTLY_PLAYED );
     }
     
     public void putEmulationProfileDefault( String value )

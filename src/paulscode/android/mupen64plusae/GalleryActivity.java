@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Date;
 
 import org.mupen64plusae.v3.alpha.R;
 
@@ -66,6 +67,7 @@ import android.support.v7.widget.SearchView.OnQueryTextListener;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v4.view.GravityCompat;
 import android.view.View.OnLayoutChangeListener;
 
@@ -383,6 +385,15 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
             searches = query.split(" ");
         
         List<GalleryItem> items = new ArrayList<GalleryItem>();
+        List<GalleryItem> recentItems = null;
+        int currentTime = 0;
+        final boolean showRecentlyPlayed = mUserPrefs.getShowRecentlyPlayed();
+        if ( showRecentlyPlayed )
+        {
+            recentItems = new ArrayList<GalleryItem>();
+            currentTime = (int) ( new Date().getTime()/1000 );
+        }
+        
         for( String md5 : config.keySet() )
         {
             if( !ConfigFile.SECTIONLESS_NAME.equals( md5 ) )
@@ -412,13 +423,49 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
                     int lastPlayed = 0;
                     if ( lastPlayedStr != null )
                         lastPlayed = Integer.parseInt( lastPlayedStr );
-                    items.add( new GalleryItem( this, md5, goodName, romPath, artPath, lastPlayed ) );
+                    
+                    GalleryItem item = new GalleryItem( this, md5, goodName, romPath, artPath, lastPlayed );
+                    items.add( item );
+                    if ( showRecentlyPlayed && currentTime - item.lastPlayed <= 60 * 60 * 24 * 7 ) // 7 days
+                        recentItems.add( item );
                 }
             }
         }
         Collections.sort( items, new GalleryItem.NameComparator() );
+        if ( recentItems != null )
+            Collections.sort( recentItems, new GalleryItem.RecentlyPlayedComparator() );
+        
+        List<GalleryItem> combinedItems = items;
+        if ( showRecentlyPlayed && recentItems.size() > 0 )
+        {
+            combinedItems = new ArrayList<GalleryItem>();
+            
+            combinedItems.add( new GalleryItem( this, getString( R.string.galleryRecentlyPlayed ) ) );
+            combinedItems.addAll( recentItems );
+            
+            combinedItems.add( new GalleryItem( this, getString( R.string.galleryLibrary ) ) );
+            combinedItems.addAll( items );
+            
+            items = combinedItems;
+        }
+        
         mGridView.setAdapter( new GalleryItem.Adapter( this, items ) );
-        mGridView.setLayoutManager( new GridLayoutManager( this, galleryColumns ) );
+        
+        // Allow the headings to take up the entire width of the layout
+        final List<GalleryItem> finalItems = items;
+        GridLayoutManager layoutManager = new GridLayoutManager( this, galleryColumns );
+        layoutManager.setSpanSizeLookup( new GridLayoutManager.SpanSizeLookup()
+        {
+            @Override
+            public int getSpanSize( int position )
+            {
+                if ( finalItems.get( position ).isHeading )
+                    return galleryColumns;
+                return 1;
+            }
+        });
+        
+        mGridView.setLayoutManager( layoutManager );
     }
     
     private void popupFaq()

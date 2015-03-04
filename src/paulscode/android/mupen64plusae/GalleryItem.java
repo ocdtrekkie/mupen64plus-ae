@@ -41,11 +41,13 @@ import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
+import android.util.TypedValue;
 
 public class GalleryItem
 {
@@ -55,6 +57,7 @@ public class GalleryItem
     public final int lastPlayed;
     public final File romFile;
     public final Context context;
+    public final boolean isHeading;
     public BitmapDrawable artBitmap;
     
     public GalleryItem( Context context, String md5, String goodName, String romPath, String artPath, int lastPlayed )
@@ -65,8 +68,21 @@ public class GalleryItem
         this.artPath = artPath;
         this.artBitmap = null;
         this.lastPlayed = lastPlayed;
+        this.isHeading = false;
         
         romFile = TextUtils.isEmpty( romPath ) ? null : new File( romPath );
+    }
+    
+    public GalleryItem( Context context, String headingName )
+    {
+        this.goodName = headingName;
+        this.context = context;
+        this.isHeading = true;
+        this.md5 = null;
+        this.artPath = null;
+        this.artBitmap = null;
+        this.lastPlayed = 0;
+        romFile = null;
     }
     
     public void loadBitmap()
@@ -190,6 +206,12 @@ public class GalleryItem
             return 0;
         }
         
+        @Override
+        public int getItemViewType( int position )
+        {
+            return mObjects.get( position ).isHeading ? 1 : 0;
+        }
+        
         public void onBindViewHolder( ViewHolder holder, int position )
         {
             // Clear the now-offscreen bitmap to conserve memory
@@ -203,23 +225,40 @@ public class GalleryItem
             
             if( item != null )
             {
-                item.loadBitmap();
-                
                 ImageView artView = (ImageView) view.findViewById( R.id.imageArt );
-                if( item.artBitmap != null )
-                    artView.setImageDrawable( item.artBitmap );
-                else
-                    artView.setImageResource( R.drawable.default_coverart );
-                
-                RelativeLayout layout = (RelativeLayout) view.findViewById( R.id.info );
+                ImageView dotsView = (ImageView) view.findViewById( R.id.dots );
                 TextView tv1 = (TextView) view.findViewById( R.id.text1 );
                 tv1.setText( item.toString() );
                 
-                if ( item.context instanceof GalleryActivity )
+                LinearLayout linearLayout = (LinearLayout) view.findViewById( R.id.galleryItem );
+                GalleryActivity activity = (GalleryActivity) item.context;
+                
+                if ( item.isHeading )
                 {
-                    GalleryActivity activity = (GalleryActivity) item.context;
+                    view.setClickable( false );
+                    linearLayout.setPadding( 0, 0, 0, 0 );
+                    tv1.setTextSize( TypedValue.COMPLEX_UNIT_DIP, 18.0f );
+                    dotsView.setVisibility( View.GONE );
+                    artView.setVisibility( View.GONE );
+                }
+                else
+                {
+                    view.setClickable( true );
+                    linearLayout.setPadding( activity.galleryHalfSpacing, activity.galleryHalfSpacing, activity.galleryHalfSpacing, activity.galleryHalfSpacing );
+                    tv1.setTextSize( TypedValue.COMPLEX_UNIT_DIP, 13.0f );
+                    dotsView.setVisibility( View.VISIBLE );
+                    artView.setVisibility( View.VISIBLE );
+                    
+                    item.loadBitmap();
+                    if( item.artBitmap != null )
+                        artView.setImageDrawable( item.artBitmap );
+                    else
+                        artView.setImageResource( R.drawable.default_coverart );
+                    
                     artView.getLayoutParams().width = activity.galleryWidth;
                     artView.getLayoutParams().height = (int) ( activity.galleryWidth / activity.galleryAspectRatio );
+                    
+                    RelativeLayout layout = (RelativeLayout) view.findViewById( R.id.info );
                     layout.getLayoutParams().width = activity.galleryWidth;
                 }
             }

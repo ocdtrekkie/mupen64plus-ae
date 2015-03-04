@@ -50,6 +50,12 @@
     <PreferenceCategory
         android:key="categoryLibrary"
         android:title="@string/categoryLibrary_title" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="showRecentlyPlayed"
+            android:summary="@string/showRecentlyPlayed_summary"
+            android:title="@string/showRecentlyPlayed_title" />
+
         <paulscode.android.mupen64plusae.preference.PathPreference
             android:defaultValue="@string/pathRomsDir_default"
             android:key="pathRomsDir"
@@ -59,13 +65,11 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="searchZips"
-            android:summary="@string/cacheRomInfo_searchZips"
             android:title="@string/cacheRomInfo_searchZips" />
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="downloadArt"
-            android:summary="@string/cacheRomInfo_downloadArt"
             android:title="@string/cacheRomInfo_downloadArt" />
     </PreferenceCategory>
 
