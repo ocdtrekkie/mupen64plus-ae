@@ -59,7 +59,7 @@
     <!-- Menu Activity -->
     <string name="menuItem_search">Search</string>
     <string name="menuItem_play">Play</string>
-    <string name="menuItem_refreshRoms">Refresh ROMs</string>
+    <string name="menuItem_refreshRoms">Update library</string>
     <string name="menuItem_settings">Settings</string>
     <string name="menuItem_globalSettings">Global settings</string>
     <string name="menuItem_emulationProfiles">Emulation profiles</string>
@@ -202,6 +202,7 @@
     <string name="categoryCore_title">Core</string>
     <string name="categoryAudio_title">Audio</string>
     <string name="categoryData_title">Data</string>
+    <string name="categoryLibrary_title">Library</string>
     <string name="categoryGameSettings_title">Game-specific settings</string>
     <string name="categoryGameSettings_titleNamed">%1$s settings</string>
 
@@ -375,6 +376,8 @@
     <string name="pathHiResTextures_title">Import texture pack</string>
     <string name="pathHiResTextures_summary">Apply custom textures (ZIP format) to a game</string>
     <string name="pathHiResTextures_default">~</string>
+    <string name="pathRomsDir_title">ROMs folder</string>
+    <string name="pathRomsDir_default">!Downloads</string>
     <string name="pathGameSaves_title">Game save folder</string>
     <string name="pathGameSaves_default">!mupen64plusae-v3-alpha</string>
 
@@ -478,6 +481,8 @@
     <string name="cacheRomInfo_downloadingArt">Downloading cover art…</string>
     <string name="cacheRomInfo_refreshingUI">Refreshing UI…</string>
     <string name="cacheRomInfo_extractingZip">Extracting zip entry…</string>
+    <string name="cacheRomInfo_searchZips">Search zip files</string>
+    <string name="cacheRomInfo_downloadArt">Download cover art</string>
 
     <!-- Seek Bar Preference -->
     <string name="seekBarPreference_summary">%1$d %2$s</string>

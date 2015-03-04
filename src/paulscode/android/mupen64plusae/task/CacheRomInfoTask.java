@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+import java.util.Set;
 
 import org.mupen64plusae.v3.alpha.R;
 
@@ -59,7 +60,7 @@ public class CacheRomInfoTask extends AsyncTask<Void, ConfigSection, ConfigFile>
     }
     
     public CacheRomInfoTask( Activity activity, File searchPath, String databasePath, String configPath,
-            String artDir, String unzipDir, boolean searchZips, boolean downloadArt, boolean clearGallery,
+            String artDir, String unzipDir, boolean searchZips, boolean downloadArt,
             CacheRomInfoListener listener )
     {
         if( searchPath == null )
@@ -84,7 +85,6 @@ public class CacheRomInfoTask extends AsyncTask<Void, ConfigSection, ConfigFile>
         mUnzipDir = unzipDir;
         mSearchZips = searchZips;
         mDownloadArt = downloadArt;
-        mClearGallery = clearGallery;
         mListener = listener;
         
         CharSequence title = activity.getString( R.string.scanning_title );
@@ -100,7 +100,6 @@ public class CacheRomInfoTask extends AsyncTask<Void, ConfigSection, ConfigFile>
     private final String mUnzipDir;
     private final boolean mSearchZips;
     private final boolean mDownloadArt;
-    private final boolean mClearGallery;
     private final CacheRomInfoListener mListener;
     private final ProgressDialog mProgress;
     
@@ -118,15 +117,13 @@ public class CacheRomInfoTask extends AsyncTask<Void, ConfigSection, ConfigFile>
         final List<File> files = getAllFiles( mSearchPath );
         final RomDatabase database = new RomDatabase( mDatabasePath );
         final ConfigFile config = new ConfigFile( mConfigPath );
-        if (mClearGallery)
-            config.clear();
         
         mProgress.setMaxProgress( files.size() );
         for( final File file : files )
         {
             mProgress.setMaxSubprogress( 0 );
             mProgress.setSubtext( "" );
-            mProgress.setText( file.getAbsolutePath().substring( mSearchPath.getAbsolutePath().length() ) );
+            mProgress.setText( file.getAbsolutePath().substring( mSearchPath.getAbsolutePath().length() + 1 ) );
             mProgress.setMessage( R.string.cacheRomInfo_searching );
             
             if( isCancelled() ) break;
@@ -183,6 +180,36 @@ public class CacheRomInfoTask extends AsyncTask<Void, ConfigSection, ConfigFile>
             }
             mProgress.incrementProgress( 1 );
         }
+        
+        // Remove ROM entries that no longer exist
+        Set<String> md5Set = config.keySet();
+        String[] md5s = md5Set.toArray( new String[ md5Set.size() ] );
+        
+        for ( String md5 : md5s ) {
+            ConfigSection section = config.get( md5 );
+            if ( section.get( "goodName" ) == null ) continue;
+            
+            if ( section.get( "exists" ) != null )
+            {
+                // Remove the "exists" field
+                section.put( "exists", null );
+            }
+            else
+            {
+                // Delete the cover art file
+                String artPath = section.get( "artPath" );
+                if ( artPath != null )
+                {
+                    File artFile = new File( artPath );
+                    if ( artFile != null && artFile.exists() )
+                        artFile.delete();
+                }
+                
+                // Remove the config section
+                config.remove( md5 );
+            }
+        }
+        
         config.save();
         return config;
     }
@@ -241,7 +268,12 @@ public class CacheRomInfoTask extends AsyncTask<Void, ConfigSection, ConfigFile>
         config.put( md5, "romPath", file.getAbsolutePath() );
         config.put( md5, "artPath", artPath );
         
-        if( mDownloadArt )
+        // ConfigSections that do not have the "exists" key will be removed
+        config.put( md5, "exists", "true" );
+        
+        // Only download the cover art if it wasn't already downloaded
+        File artFile = new File( artPath );
+        if( mDownloadArt && ( artFile == null || !artFile.exists() ) )
         {
             if( isCancelled() ) return;
             mProgress.setMessage( R.string.cacheRomInfo_downloadingArt );
