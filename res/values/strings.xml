@@ -243,7 +243,7 @@
     <string name="audioSwapChannels_title">Swap audio channels</string>
     <string name="audioSwapChannels_summary">Swap the left and right audio channels</string>
     <string name="showRecentlyPlayed_title">Recently Played</string>
-    <string name="showRecentlyPlayed_summary">Show games played within the past week.</string>
+    <string name="showRecentlyPlayed_summary">Show games played within the past week</string>
 
     <!-- Gallery sections -->
     <string name="galleryRecentlyPlayed">Recently played</string>
