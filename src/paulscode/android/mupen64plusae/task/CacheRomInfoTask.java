@@ -181,6 +181,10 @@ public class CacheRomInfoTask extends AsyncTask<Void, ConfigSection, ConfigFile>
             mProgress.incrementProgress( 1 );
         }
         
+        // If the user cancelled updating the library, do not remove files that were not found
+        // (since maybe they weren't found because the search was cancelled!)
+        boolean cancelled = isCancelled();
+        
         // Remove ROM entries that no longer exist
         Set<String> md5Set = config.keySet();
         String[] md5s = md5Set.toArray( new String[ md5Set.size() ] );
@@ -189,7 +193,7 @@ public class CacheRomInfoTask extends AsyncTask<Void, ConfigSection, ConfigFile>
             ConfigSection section = config.get( md5 );
             if ( section.get( "goodName" ) == null ) continue;
             
-            if ( section.get( "exists" ) != null )
+            if ( section.get( "exists" ) != null || cancelled )
             {
                 // Remove the "exists" field
                 section.put( "exists", null );
