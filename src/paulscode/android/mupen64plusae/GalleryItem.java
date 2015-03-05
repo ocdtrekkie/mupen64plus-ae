@@ -262,7 +262,9 @@ public class GalleryItem
                 if ( item.isHeading )
                 {
                     view.setClickable( false );
+                    view.setLongClickable( false );
                     linearLayout.setPadding( 0, 0, 0, 0 );
+                    tv1.setPadding( 5, 10, 0, 0 );
                     tv1.setTextSize( TypedValue.COMPLEX_UNIT_DIP, 18.0f );
                     dotsView.setVisibility( View.GONE );
                     artView.setVisibility( View.GONE );
@@ -270,7 +272,9 @@ public class GalleryItem
                 else
                 {
                     view.setClickable( true );
+                    view.setLongClickable( true );
                     linearLayout.setPadding( activity.galleryHalfSpacing, activity.galleryHalfSpacing, activity.galleryHalfSpacing, activity.galleryHalfSpacing );
+                    tv1.setPadding( 0, 0, 0, 0 );
                     tv1.setTextSize( TypedValue.COMPLEX_UNIT_DIP, 13.0f );
                     dotsView.setVisibility( View.VISIBLE );
                     artView.setVisibility( View.VISIBLE );
