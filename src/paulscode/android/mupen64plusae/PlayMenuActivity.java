@@ -77,6 +77,7 @@ public class PlayMenuActivity extends PreferenceActivity implements OnPreference
     public static final String ACTION_WIKI = "actionWiki";
     public static final String ACTION_RESET_GAME_PREFS = "actionResetGamePrefs";
     public static final String ACTION_EXIT = "actionExit";
+    public static final String ACTION_GLOBAL_SETTINGS = "screenGlobalSettings";
     
     public static final String EMULATION_PROFILE = "emulationProfile";
     public static final String TOUCHSCREEN_PROFILE = "touchscreenProfile";
@@ -174,6 +175,7 @@ public class PlayMenuActivity extends PreferenceActivity implements OnPreference
         PrefUtil.setOnPreferenceClickListener( this, ACTION_CHEAT_EDITOR, this );
         PrefUtil.setOnPreferenceClickListener( this, ACTION_WIKI, this );
         PrefUtil.setOnPreferenceClickListener( this, ACTION_RESET_GAME_PREFS, this );
+        PrefUtil.setOnPreferenceClickListener( this, ACTION_GLOBAL_SETTINGS, this );
         
         // Remove wiki menu item if not applicable
         if( TextUtils.isEmpty( mRomDetail.wikiUrl ) )
@@ -370,6 +372,12 @@ public class PlayMenuActivity extends PreferenceActivity implements OnPreference
         else if( key.equals( ACTION_RESET_GAME_PREFS ) )
         {
             actionResetGamePrefs();
+        }
+        else if( key.equals( ACTION_GLOBAL_SETTINGS ) )
+        {
+            Intent intent = new Intent( this, SettingsGlobalActivity.class );
+            intent.putExtra( Keys.Extras.MENU_DISPLAY_MODE, 2 );
+            startActivity( intent );
         }
         return false;
     }

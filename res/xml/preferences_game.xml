@@ -18,7 +18,6 @@
         android:key="screenGlobalSettings"
         android:summary="@string/screenGlobalSettings_summary"
         android:title="@string/screenGlobalSettings_title" >
-        <intent android:action=".SettingsGlobalActivity" />
     </Preference>
 
     <PreferenceCategory
