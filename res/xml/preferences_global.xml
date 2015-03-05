@@ -56,6 +56,12 @@
             android:summary="@string/showRecentlyPlayed_summary"
             android:title="@string/showRecentlyPlayed_title" />
 
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="showFullNames"
+            android:summary="@string/showFullNames_summary"
+            android:title="@string/showFullNames_title" />
+
         <paulscode.android.mupen64plusae.preference.PathPreference
             android:defaultValue="@string/pathRomsDir_default"
             android:key="pathRomsDir"

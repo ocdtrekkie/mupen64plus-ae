@@ -394,11 +394,18 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
             currentTime = (int) ( new Date().getTime()/1000 );
         }
         
+        final boolean showFullNames = mUserPrefs.getShowFullNames();
+        
         for( String md5 : config.keySet() )
         {
             if( !ConfigFile.SECTIONLESS_NAME.equals( md5 ) )
             {
                 String goodName = config.get( md5, "goodName" );
+                if ( !showFullNames )
+                {
+                    // Strip the region and dump information
+                    goodName = goodName.split( " \\(" )[0].trim();
+                }
                 
                 boolean matchesSearch = true;
                 if ( searches != null && searches.length > 0 )
