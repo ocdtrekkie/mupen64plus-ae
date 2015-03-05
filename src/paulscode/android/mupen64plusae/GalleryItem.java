@@ -157,6 +157,16 @@ public class GalleryItem
                         showContextualMenu( view );
                     }
                 });
+                
+                dotsView.setOnLongClickListener( new OnLongClickListener()
+                {
+                    @Override
+                    public boolean onLongClick( View view )
+                    {
+                        showContextualMenu( view );
+                        return true;
+                    }
+                });
             }
         }
         
