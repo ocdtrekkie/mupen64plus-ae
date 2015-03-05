@@ -60,7 +60,7 @@ public class CacheRomInfoTask extends AsyncTask<Void, ConfigSection, ConfigFile>
     }
     
     public CacheRomInfoTask( Activity activity, File searchPath, String databasePath, String configPath,
-            String artDir, String unzipDir, boolean searchZips, boolean downloadArt,
+            String artDir, String unzipDir, boolean searchZips, boolean downloadArt, boolean clearGallery,
             CacheRomInfoListener listener )
     {
         if( searchPath == null )
@@ -85,6 +85,7 @@ public class CacheRomInfoTask extends AsyncTask<Void, ConfigSection, ConfigFile>
         mUnzipDir = unzipDir;
         mSearchZips = searchZips;
         mDownloadArt = downloadArt;
+        mClearGallery = clearGallery;
         mListener = listener;
         
         CharSequence title = activity.getString( R.string.scanning_title );
@@ -100,6 +101,7 @@ public class CacheRomInfoTask extends AsyncTask<Void, ConfigSection, ConfigFile>
     private final String mUnzipDir;
     private final boolean mSearchZips;
     private final boolean mDownloadArt;
+    private final boolean mClearGallery;
     private final CacheRomInfoListener mListener;
     private final ProgressDialog mProgress;
     

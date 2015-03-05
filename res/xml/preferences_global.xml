@@ -71,12 +71,20 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="searchZips"
-            android:title="@string/cacheRomInfo_searchZips" />
+            android:title="@string/cacheRomInfo_searchZips_title"
+            android:summary="@string/cacheRomInfo_searchZips_summary" />
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="downloadArt"
-            android:title="@string/cacheRomInfo_downloadArt" />
+            android:title="@string/cacheRomInfo_downloadArt_title"
+            android:summary="@string/cacheRomInfo_downloadArt_summary" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="clearGallery"
+            android:title="@string/cacheRomInfo_clearGallery_title"
+            android:summary="@string/cacheRomInfo_clearGallery_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory

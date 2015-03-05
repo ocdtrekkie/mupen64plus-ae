@@ -564,7 +564,7 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
     {
         // Asynchronously search for ROMs
         mCacheRomInfoTask = new CacheRomInfoTask( this, new File( mUserPrefs.romsDir ),
-                mAppData.mupen64plus_ini, mUserPrefs.romInfoCache_cfg, mUserPrefs.coverArtDir, mUserPrefs.unzippedRomsDir, mUserPrefs.getSearchZips(), mUserPrefs.getDownloadArt(), this );
+                mAppData.mupen64plus_ini, mUserPrefs.romInfoCache_cfg, mUserPrefs.coverArtDir, mUserPrefs.unzippedRomsDir, mUserPrefs.getSearchZips(), mUserPrefs.getDownloadArt(), mUserPrefs.getClearGallery(), this );
         mCacheRomInfoTask.execute();
     }
     

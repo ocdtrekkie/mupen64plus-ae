@@ -541,8 +541,13 @@
     <string name="cacheRomInfo_downloadingArt">Downloading cover art…</string>
     <string name="cacheRomInfo_refreshingUI">Refreshing UI…</string>
     <string name="cacheRomInfo_extractingZip">Extracting zip entry…</string>
-    <string name="cacheRomInfo_searchZips">Search zip files</string>
-    <string name="cacheRomInfo_downloadArt">Download cover art</string>
+    
+    <string name="cacheRomInfo_searchZips_title">Search zip files</string>
+    <string name="cacheRomInfo_searchZips_summary">Check the contents of zip files for valid game ROMs</string>
+    <string name="cacheRomInfo_downloadArt_title">Download cover art</string>
+    <string name="cacheRomInfo_downloadArt_summary">Retrieve cover art for the games from online</string>
+    <string name="cacheRomInfo_clearGallery_title">Clear missing files</string>
+    <string name="cacheRomInfo_clearGallery_summary">Remove missing files when updating the library (game saves will not be deleted)</string>
 
     <!-- Seek Bar Preference -->
     <string name="seekBarPreference_summary">%1$d %2$s</string>
