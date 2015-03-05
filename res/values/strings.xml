@@ -531,7 +531,8 @@
 
     <!-- ROM Scanning -->
     <string name="scanning_title">Updating library…</string>
-
+    <string name="addToLibrary_summary">Select a file or folder to add to the library</string>
+    
     <!-- ROM information calculation -->
     <string name="cacheRomInfo_searching">Searching…</string>
     <string name="cacheRomInfo_searchingZip">Searching zip file…</string>

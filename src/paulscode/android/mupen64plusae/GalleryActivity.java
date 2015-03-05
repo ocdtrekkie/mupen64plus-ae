@@ -29,6 +29,8 @@ import java.util.Date;
 import org.mupen64plusae.v3.alpha.R;
 
 import paulscode.android.mupen64plusae.dialog.ChangeLog;
+import paulscode.android.mupen64plusae.dialog.ScanRomsDialog;
+import paulscode.android.mupen64plusae.dialog.ScanRomsDialog.ScanRomsDialogListener;
 import paulscode.android.mupen64plusae.input.DiagnosticActivity;
 import paulscode.android.mupen64plusae.persistent.AppData;
 import paulscode.android.mupen64plusae.persistent.ConfigFile;
@@ -44,6 +46,7 @@ import paulscode.android.mupen64plusae.task.ComputeMd5Task.ComputeMd5Listener;
 import paulscode.android.mupen64plusae.util.DeviceUtil;
 import paulscode.android.mupen64plusae.util.Notifier;
 import paulscode.android.mupen64plusae.util.Utility;
+import paulscode.android.mupen64plusae.MenuListView;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -70,6 +73,19 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v4.view.GravityCompat;
 import android.view.View.OnLayoutChangeListener;
+import android.view.View.OnClickListener;
+
+import android.support.v7.app.ActionBar;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.content.res.Configuration;
+
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.Animation.AnimationListener;
+import android.widget.ImageButton;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
 
 public class GalleryActivity extends ActionBarActivity implements ComputeMd5Listener, CacheRomInfoListener
 {
@@ -79,6 +95,10 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
     
     // Widgets
     private RecyclerView mGridView;
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle drawerToggle;
+    private MenuListView drawerList;
+    private ImageButton mActionButton;
     private SearchView mSearchView;
     private String mSearchQuery = "";
     
@@ -112,7 +132,7 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
     @Override
     protected void onCreate( Bundle savedInstanceState )
     {
-        super.setTheme( android.support.v7.appcompat.R.style.Theme_AppCompat );
+        super.setTheme( android.support.v7.appcompat.R.style.Theme_AppCompat_NoActionBar );
         super.onCreate( savedInstanceState );
         
         // Get app data and user preferences
@@ -146,10 +166,129 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
         setContentView( R.layout.gallery_activity );
         mGridView = (RecyclerView) findViewById( R.id.gridview );
         
+        // Configure the Floating Action Button to add files or folders to the library
+        mActionButton = (ImageButton) findViewById( R.id.add );
+        mActionButton.setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View view )
+            {
+                promptSearchPath( null );
+            }
+        });
+        
+        // Show and hide the Floating Action Button while scrolling
+        // (Android does not have built-in support for FABs, believe it or not)
+        mGridView.setOnScrollListener( new OnScrollListener()
+        {
+            public void onScrolled( RecyclerView recyclerView, int dx, int dy )
+            {
+                if ( dy < 0 )
+                {
+                    if ( mActionButton.getVisibility() == View.GONE && mActionButton.getAnimation() == null )
+                        showActionButton();
+                }
+                else if (dy > 0)
+                {
+                    if ( mActionButton.getVisibility() == View.VISIBLE && mActionButton.getAnimation() == null )
+                        hideActionButton();
+                }
+            }
+            
+            public void onScrollStateChanged( RecyclerView recyclerView, int newState )
+            {
+            }
+        });
+        
+        // Add the toolbar to the activity (which supports the fancy menu/arrow animation)
+        Toolbar toolbar = (Toolbar) findViewById( R.id.toolbar );
+        toolbar.setTitle( R.string.app_name );
+        setSupportActionBar( toolbar );
+        
+        // Configure the navigation drawer
+        drawerLayout = (DrawerLayout) findViewById( R.id.drawerLayout );
+        drawerToggle = new ActionBarDrawerToggle( this, drawerLayout, toolbar, R.string.app_name, R.string.app_name )
+        {
+            @Override
+            public void onDrawerClosed( View drawerView )
+            {
+                showActionButton();
+                super.onDrawerClosed( drawerView );
+            }
+
+            @Override
+            public void onDrawerOpened( View drawerView )
+            {
+                hideActionButton();
+                super.onDrawerOpened( drawerView );
+            }
+        };
+        drawerLayout.setDrawerListener( drawerToggle );
+        
+        // Configure the list in the navigation drawer
+        final Activity activity = this;
+        drawerList = (MenuListView) findViewById( R.id.left_drawer );
+        drawerList.setMenuResource( R.menu.gallery_drawer );
+        drawerList.setOnClickListener( new MenuListView.OnClickListener()
+        {
+            @Override
+            public boolean onClick( MenuItem menuItem )
+            {
+                switch( menuItem.getItemId() )
+                {
+                    case R.id.menuItem_globalSettings:
+                        startActivity( new Intent( activity, SettingsGlobalActivity.class ) );
+                        return true;
+                    case R.id.menuItem_emulationProfiles:
+                        startActivity( new Intent( activity, ManageEmulationProfilesActivity.class ) );
+                        return true;
+                    case R.id.menuItem_touchscreenProfiles:
+                        startActivity( new Intent( activity, ManageTouchscreenProfilesActivity.class ) );
+                        return true;
+                    case R.id.menuItem_controllerProfiles:
+                        startActivity( new Intent( activity, ManageControllerProfilesActivity.class ) );
+                        return true;
+                    case R.id.menuItem_faq:
+                        popupFaq();
+                        return true;
+                    case R.id.menuItem_helpForum:
+                        Utility.launchUri( activity, R.string.uri_forum );
+                        return true;
+                    case R.id.menuItem_controllerDiagnostics:
+                        startActivity( new Intent( activity, DiagnosticActivity.class ) );
+                        return true;
+                    case R.id.menuItem_reportBug:
+                        Utility.launchUri( activity, R.string.uri_bugReport );
+                        return true;
+                    case R.id.menuItem_appVersion:
+                        popupAppVersion();
+                        return true;
+                    case R.id.menuItem_changelog:
+                        new ChangeLog( getAssets() ).show( activity, 0, mAppData.appVersionCode );
+                        return true;
+                    case R.id.menuItem_logcat:
+                        popupLogcat();
+                        return true;
+                    case R.id.menuItem_hardwareInfo:
+                        popupHardwareInfo();
+                        return true;
+                    case R.id.menuItem_credits:
+                        Utility.launchUri( activity, R.string.uri_credits );
+                        return true;
+                    case R.id.menuItem_localeOverride:
+                        mUserPrefs.changeLocale( activity );
+                        return true;
+                }
+                return false;
+            }
+        });
+        
+        // Load some values used to define the grid view layout
         galleryMaxWidth = (int) getResources().getDimension( R.dimen.galleryImageWidth );
         galleryHalfSpacing = (int) getResources().getDimension( R.dimen.galleryHalfSpacing );
         galleryAspectRatio = galleryMaxWidth * 1.0f/getResources().getDimension( R.dimen.galleryImageHeight );
         
+        // Update the grid size and spacing whenever the layout changes
         mGridView.addOnLayoutChangeListener( new OnLayoutChangeListener()
         {
             public void onLayoutChange( View view, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom )
@@ -165,15 +304,66 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
             }
         });
         
+        // Populate the gallery with the games
         refreshGrid( new ConfigFile( mUserPrefs.romInfoCache_cfg ) );
         
-        // Popup a warning if the installation appears to be corrupt
+        // Pop up a warning if the installation appears to be corrupt
         if( !mAppData.isValidInstallation )
         {
             CharSequence title = getText( R.string.invalidInstall_title );
             CharSequence message = getText( R.string.invalidInstall_message );
             new Builder( this ).setTitle( title ).setMessage( message ).create().show();
         }
+    }
+    
+    public void hideActionButton()
+    {
+        if ( mActionButton.getVisibility() == View.GONE )
+            return;
+        
+        ScaleAnimation anim = new ScaleAnimation( 1.0f, 0.0f, 1.0f, 0.0f, 50, 50 );
+        anim.setDuration(100);
+        anim.setAnimationListener( new AnimationListener()
+        {
+            public void onAnimationStart( Animation anim )
+            {
+            }
+            
+            public void onAnimationRepeat( Animation anim )
+            {
+            }
+            
+            public void onAnimationEnd( Animation anim )
+            {
+                mActionButton.setVisibility( View.GONE );
+            }
+        });
+        mActionButton.startAnimation( anim );
+    }
+    
+    public void showActionButton()
+    {
+        if ( mActionButton.getVisibility() == View.VISIBLE )
+            return;
+        
+        ScaleAnimation anim = new ScaleAnimation( 0.0f, 1.0f, 0.0f, 1.0f, 50, 50 );
+        anim.setDuration(100);
+        anim.setAnimationListener( new AnimationListener()
+        {
+            public void onAnimationStart( Animation anim )
+            {
+                mActionButton.setVisibility( View.VISIBLE );
+            }
+            
+            public void onAnimationRepeat( Animation anim )
+            {
+            }
+            
+            public void onAnimationEnd( Animation anim )
+            {
+            }
+        });
+        mActionButton.startAnimation( anim );
     }
     
     protected void onStop()
@@ -186,6 +376,20 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
             mCacheRomInfoTask.cancel( false );
             mCacheRomInfoTask = null;
         }
+    }
+    
+    @Override
+    protected void onPostCreate( Bundle savedInstanceState )
+    {
+        super.onPostCreate( savedInstanceState );
+        drawerToggle.syncState();
+    }
+    
+    @Override
+    public void onConfigurationChanged( Configuration newConfig )
+    {
+        super.onConfigurationChanged( newConfig );
+        drawerToggle.onConfigurationChanged( newConfig );
     }
     
     @Override
@@ -239,48 +443,6 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
         {
             case R.id.menuItem_refreshRoms:
                 refreshRoms();
-                return true;
-            case R.id.menuItem_globalSettings:
-                startActivity( new Intent( this, SettingsGlobalActivity.class ) );
-                return true;
-            case R.id.menuItem_emulationProfiles:
-                startActivity( new Intent( this, ManageEmulationProfilesActivity.class ) );
-                return true;
-            case R.id.menuItem_touchscreenProfiles:
-                startActivity( new Intent( this, ManageTouchscreenProfilesActivity.class ) );
-                return true;
-            case R.id.menuItem_controllerProfiles:
-                startActivity( new Intent( this, ManageControllerProfilesActivity.class ) );
-                return true;
-            case R.id.menuItem_faq:
-                popupFaq();
-                return true;
-            case R.id.menuItem_helpForum:
-                Utility.launchUri( GalleryActivity.this, R.string.uri_forum );
-                return true;
-            case R.id.menuItem_controllerDiagnostics:
-                startActivity( new Intent( this, DiagnosticActivity.class ) );
-                return true;
-            case R.id.menuItem_reportBug:
-                Utility.launchUri( GalleryActivity.this, R.string.uri_bugReport );
-                return true;
-            case R.id.menuItem_appVersion:
-                popupAppVersion();
-                return true;
-            case R.id.menuItem_changelog:
-                new ChangeLog( getAssets() ).show( GalleryActivity.this, 0, mAppData.appVersionCode );
-                return true;
-            case R.id.menuItem_logcat:
-                popupLogcat();
-                return true;
-            case R.id.menuItem_hardwareInfo:
-                popupHardwareInfo();
-                return true;
-            case R.id.menuItem_credits:
-                Utility.launchUri( GalleryActivity.this, R.string.uri_credits );
-                return true;
-            case R.id.menuItem_localeOverride:
-                mUserPrefs.changeLocale( this );
                 return true;
             default:
                 return super.onOptionsItemSelected( menuItem );
@@ -341,6 +503,19 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
     }
     
     @Override
+    public void onBackPressed()
+    {
+        if ( drawerLayout.isDrawerOpen( GravityCompat.START ) )
+        {
+            drawerLayout.closeDrawer( GravityCompat.START );
+        }
+        else
+        {
+            super.onBackPressed();
+        }
+    }
+    
+    @Override
     public void onComputeMd5Finished( File file, String md5 )
     {
         launchPlayMenuActivity( file.getAbsolutePath(), md5 );
@@ -355,6 +530,34 @@ public class GalleryActivity extends ActionBarActivity implements ComputeMd5List
             intent.putExtra( Keys.Extras.ROM_MD5, md5 );
             startActivity( intent );
         }
+    }
+    
+    private void promptSearchPath( File startDir )
+    {
+        // Prompt for search path, then asynchronously search for ROMs
+        if( startDir == null || !startDir.exists() )
+            startDir = new File( Environment.getExternalStorageDirectory().getAbsolutePath() );
+        
+        ScanRomsDialog dialog = new ScanRomsDialog( this, startDir,
+                new ScanRomsDialogListener()
+                {
+                    @Override
+                    public void onDialogClosed( File file, int which )
+                    {
+                        if( which == DialogInterface.BUTTON_POSITIVE )
+                        {
+                            refreshRoms( /*file*/ );
+                        }
+                        else if( file != null )
+                        { 
+                            if( file.isDirectory() )
+                                promptSearchPath( file );
+                            else
+                                refreshRoms( /*file*/ );
+                        }
+                    }
+                } );
+        dialog.show();
     }
     
     private void refreshRoms()
