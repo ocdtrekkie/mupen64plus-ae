@@ -171,6 +171,57 @@
     <string name="actionCheatEditor_summary">Add, modify, and delete custom cheats</string>
     <string name="actionShare_title">Share</string>
 
+    <!-- ROM country code and dump information -->
+    <string name="categoryGameInfo_title">ROM Information</string>
+    <string name="infoVersion_title">Version %1$s</string>
+    <string name="infoVersion_summary">Game was released with multiple versions</string>
+    <string name="infoVerified_title">Verified good dump</string>
+    <string name="infoVerified_summary">Game has been verified as a good dump</string>
+    <string name="infoBad_title">Bad dump</string>
+    <string name="infoBad_summary">Game has been dumped improperly</string>
+    <string name="infoLanguage_title">%1$s languages</string>
+    <string name="infoLanguage_summary">Game has language selection</string>
+    <string name="infoOverdump_title">Overdump</string>
+    <string name="infoOverdump_summary">Game includes additional unused information</string>
+    <string name="infoHack_title">Hacked</string>
+    <string name="infoHack_summary">Game has been modified from its original state!</string>
+    <string name="infoTranslated_title">Translated</string>
+    <string name="infoTranslated_summary">Game has been translated from its original language</string>
+    <string name="infoAlternate_title">Alternate</string>
+    <string name="infoAlternate_summary">Game may have been re-released to fix bugs</string>
+    <string name="infoFixed_title">Fixed</string>
+    <string name="infoFixed_summary">Game has been modified to run better</string>
+    <string name="infoTrained_title">Trained</string>
+    <string name="infoTrained_summary">Game may include extra code to choose options at the start</string>
+    <string name="infoBeta_title">Beta</string>
+    <string name="infoBeta_summary">This is a prerelease version of the game</string>
+    <string name="infoPAL_title">PAL release</string>
+    <string name="infoPAL_summary">Game is compatible with PAL consoles</string>
+    <string name="infoNTSC_title">NTSC release</string>
+    <string name="infoNTSC_summary">Game is compatible with NTSC consoles</string>
+    <string name="infoPALNTSC_title">PAL and NTSC release</string>
+    <string name="infoPALNTSC_summary">Game is compatible with both PAL and NTSC consoles</string>
+    <string name="infoAustralia_title">Australia</string>
+    <string name="infoAustralia_summary">Game was released in Australia</string>
+    <string name="infoUSA_title">USA</string>
+    <string name="infoUSA_summary">Game was released in the USA</string>
+    <string name="infoJapan_title">Japan</string>
+    <string name="infoJapan_summary">Game was released in Japan</string>
+    <string name="infoJapanUSA_title">Japan and USA</string>
+    <string name="infoJapanUSA_summary">Game was released in Japan and the USA</string>
+    <string name="infoEurope_title">Europe</string>
+    <string name="infoEurope_summary">Game was released in Europe</string>
+    <string name="infoGermany_title">Germany</string>
+    <string name="infoGermany_summary">Game was released in Germany</string>
+    <string name="infoFrance_title">France</string>
+    <string name="infoFrance_summary">Game was released in France</string>
+    <string name="infoItaly_title">Italy</string>
+    <string name="infoItaly_summary">Game was released in Italy</string>
+    <string name="infoSpain_title">Spain</string>
+    <string name="infoSpain_summary">Game was released in Spain</string>
+    <string name="infoPublicDomain_title">Public domain</string>
+    <string name="infoPublicDomain_summary">Game was released into the public domain</string>
+
     <!-- Preference Screens -->
     <string name="screenInput_title">Input</string>
     <string name="screenInput_summary">Control settings</string>

@@ -242,7 +242,7 @@ public class UserPrefs
     public static final boolean DEFAULT_SEARCH_ZIPS = true;
     public static final boolean DEFAULT_DOWNLOAD_ART = true;
     public static final boolean DEFAULT_SHOW_RECENTLY_PLAYED = true;
-    public static final boolean DEFAULT_SHOW_FULL_NAMES = true;
+    public static final boolean DEFAULT_SHOW_FULL_NAMES = false;
     // ... add more as needed
     
     private final SharedPreferences mPreferences;
