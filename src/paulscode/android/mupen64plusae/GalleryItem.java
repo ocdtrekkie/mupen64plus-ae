@@ -40,6 +40,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.widget.RelativeLayout;
 import android.widget.LinearLayout;
 
@@ -128,7 +129,7 @@ public class GalleryItem
         }
     }
     
-    public static class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener
+    public static class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener, OnLongClickListener
     {
         public GalleryItem item;
         private Context mContext;
@@ -141,6 +142,9 @@ public class GalleryItem
             // Tapping the view itself will go directly to the game
             view.setOnClickListener( this );
             
+            // Long-pressing the view will trigger a contextual menu
+            view.setOnLongClickListener( this );
+            
             // Tapping the dotsView will trigger a contextual menu
             ImageView dotsView = (ImageView) view.findViewById( R.id.dots );
             if ( dotsView != null )
@@ -150,21 +154,26 @@ public class GalleryItem
                     @Override
                     public void onClick( View view )
                     {
-                        final GalleryActivity galleryActivity = (GalleryActivity) mContext;
-                        PopupMenu popupMenu = new PopupMenu( mContext, view );
-                        popupMenu.setOnMenuItemClickListener( new OnMenuItemClickListener()
-                        {
-                            public boolean onMenuItemClick( MenuItem menuItem )
-                            {
-                                return galleryActivity.onGalleryItemMenuSelected( item, menuItem );
-                            }
-                        });
-                        
-                        if ( galleryActivity.onGalleryItemCreateMenu( item, popupMenu.getMenu() ) )
-                            popupMenu.show();
+                        showContextualMenu( view );
                     }
                 });
             }
+        }
+        
+        public void showContextualMenu( View view )
+        {
+            final GalleryActivity galleryActivity = (GalleryActivity) mContext;
+            PopupMenu popupMenu = new PopupMenu( mContext, view );
+            popupMenu.setOnMenuItemClickListener( new OnMenuItemClickListener()
+            {
+                public boolean onMenuItemClick( MenuItem menuItem )
+                {
+                    return galleryActivity.onGalleryItemMenuSelected( item, menuItem );
+                }
+            });
+            
+            if ( galleryActivity.onGalleryItemCreateMenu( item, popupMenu.getMenu() ) )
+                popupMenu.show();
         }
         
         @Override
@@ -180,6 +189,13 @@ public class GalleryItem
                 GalleryActivity activity = (GalleryActivity) mContext;
                 activity.onGalleryItemClick( item );
             }
+        }
+        
+        @Override
+        public boolean onLongClick( View view )
+        {
+            showContextualMenu( view );
+            return true;
         }
     }
     
