@@ -132,11 +132,6 @@ public class SettingsGlobalActivity extends PreferenceActivity implements OnPref
             if( mode == 1 || mode == 2 )
             {
                 // Remove distractions if this was launched from TouchscreenProfileActivity or PlayMenuActivity
-                PrefUtil.removePreference( this, CATEGORY_LIBRARY, "showRecentlyPlayed" );
-                PrefUtil.removePreference( this, CATEGORY_LIBRARY, "pathRomsDir" );
-                PrefUtil.removePreference( this, CATEGORY_LIBRARY, "searchZips" );
-                PrefUtil.removePreference( this, CATEGORY_LIBRARY, "downloadArt" );
-                
                 Preference preference = findPreference(CATEGORY_LIBRARY);
                 PreferenceScreen preferenceScreen = getPreferenceScreen();
                 preferenceScreen.removePreference(preference);
